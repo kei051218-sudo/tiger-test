@@ -41,10 +41,10 @@ export default function OfferingScreen({ tigerType, onSelect }: Props) {
         </div>
       </div>
 
-      <div className="content" style={{ paddingTop: 0 }}>
+      <div className="content" style={{ paddingTop: 0, justifyContent: "center" }}>
         {/* 안내 텍스트 */}
         <div style={{
-          marginTop: 24, marginBottom: 28,
+          marginTop: 0, marginBottom: 24,
           opacity: animIn ? 1 : 0,
           transform: animIn ? "translateY(0)" : "translateY(14px)",
           transition: "all 0.6s ease"
