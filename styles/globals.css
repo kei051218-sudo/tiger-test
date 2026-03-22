@@ -1,0 +1,369 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap');
+
+:root {
+  --ink: #1a1410;
+  --paper: #f5f0e8;
+  --ash: #2c2520;
+  --ember: #8b4513;
+  --gold: #c9a84c;
+  --gold-dim: #9a7a3a;
+  --fog: rgba(245,240,232,0.08);
+  --fog-mid: rgba(245,240,232,0.15);
+  --fog-high: rgba(245,240,232,0.85);
+  --shadow: rgba(0,0,0,0.6);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Noto Serif KR', serif;
+  font-size: 16px;
+  line-height: 1.8;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#__next {
+  height: 100%;
+}
+
+/* 스크롤바 */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+/* 공통 레이아웃 */
+.screen {
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 배경 이미지 */
+.bg-full {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+/* 오버레이 */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(26,20,16,0.3) 0%,
+    rgba(26,20,16,0.55) 40%,
+    rgba(26,20,16,0.85) 70%,
+    rgba(26,20,16,0.97) 100%
+  );
+}
+
+/* 콘텐츠 영역 */
+.content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 28px 40px;
+}
+
+/* 타이포 */
+.display-title {
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 500;
+  font-size: clamp(2rem, 8vw, 2.8rem);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--paper);
+}
+
+.display-subtitle {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  color: rgba(245,240,232,0.55);
+  margin-top: 8px;
+}
+
+.body-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 2;
+  color: rgba(245,240,232,0.82);
+  white-space: pre-line;
+}
+
+.label-text {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+}
+
+/* 버튼 */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 32px;
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.5);
+  color: var(--gold);
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(201,168,76,0.08);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.btn-primary:hover::before { transform: scaleX(1); }
+.btn-primary:hover { border-color: var(--gold); color: var(--paper); }
+.btn-primary:active { transform: scale(0.98); }
+
+/* 진행 표시 */
+.progress-bar {
+  width: 100%;
+  height: 1px;
+  background: rgba(245,240,232,0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: linear-gradient(to right, var(--gold-dim), var(--gold));
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 선택지 카드 */
+.option-card {
+  position: relative;
+  padding: 18px 22px;
+  border: 1px solid rgba(245,240,232,0.12);
+  background: rgba(26,20,16,0.4);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+  width: 100%;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.88rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(245,240,232,0.75);
+  backdrop-filter: blur(8px);
+}
+
+.option-card:hover {
+  border-color: rgba(201,168,76,0.4);
+  background: rgba(201,168,76,0.06);
+  color: var(--paper);
+}
+
+.option-card.selected {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  color: var(--paper);
+}
+
+.option-card.selected::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+
+/* 결과 카드 */
+.result-card {
+  background: rgba(44,37,32,0.7);
+  border: 1px solid rgba(201,168,76,0.25);
+  padding: 28px 24px;
+  backdrop-filter: blur(12px);
+}
+
+.keyword-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold-dim);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+
+/* 오브제 선택 그리드 */
+.offering-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.offering-item {
+  aspect-ratio: 1;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid rgba(245,240,232,0.1);
+  overflow: hidden;
+  transition: all 0.25s ease;
+  background: rgba(44,37,32,0.5);
+}
+
+.offering-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.offering-item:hover img { transform: scale(1.05); }
+.offering-item:hover { border-color: rgba(201,168,76,0.5); }
+
+.offering-item.selected {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold);
+}
+
+.offering-item .item-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(26,20,16,0.9));
+  padding: 16px 8px 8px;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: rgba(245,240,232,0.8);
+  text-align: center;
+}
+
+/* 공유 버튼 */
+.btn-share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.35);
+  color: var(--gold);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex: 1;
+}
+
+.btn-share:hover {
+  background: rgba(201,168,76,0.2);
+  border-color: var(--gold);
+  color: var(--paper);
+}
+
+/* CTA 특별 버튼 */
+.btn-cta {
+  padding: 18px 28px;
+  background: var(--gold);
+  border: none;
+  color: var(--ink);
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 100%;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.btn-cta:hover {
+  background: var(--paper);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* 구분선 */
+.divider {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+  margin: 0 auto;
+}
+
+/* 페이지 전환 애니메이션 */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fadeUp { animation: fadeUp 0.6s ease forwards; }
+.animate-fadeIn { animation: fadeIn 0.5s ease forwards; }
+
+.anim-delay-1 { animation-delay: 0.1s; opacity: 0; }
+.anim-delay-2 { animation-delay: 0.25s; opacity: 0; }
+.anim-delay-3 { animation-delay: 0.4s; opacity: 0; }
+.anim-delay-4 { animation-delay: 0.55s; opacity: 0; }
+.anim-delay-5 { animation-delay: 0.7s; opacity: 0; }
+.anim-delay-6 { animation-delay: 0.85s; opacity: 0; }
+.anim-delay-7 { animation-delay: 1.0s; opacity: 0; }
+
+/* 결과 카드 캡처 영역 */
+#share-card {
+  background: var(--ink);
+  width: 100%;
+}
+
+/* 헤더 작은 로고 */
+.mini-logo {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--gold-dim);
+  opacity: 0.6;
+}
