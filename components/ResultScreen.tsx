@@ -84,7 +84,7 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
           }}>
             <div className="label-text" style={{ marginBottom: 12 }}>당신 안의 호랑이</div>
             <div className="result-card">
-              <div style={{ position: "relative", width: "100%", aspectRatio: "1.6", marginBottom: 20, overflow: "hidden" }}>
+              <div style={{ position: "relative", width: "100%", aspectRatio: "1", marginBottom: 20, overflow: "hidden" }}>
                 <Image
                   src={tiger.image}
                   alt={tiger.name}
@@ -93,7 +93,7 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
                 />
                 <div style={{
                   position: "absolute", inset: 0,
-                  background: "linear-gradient(to bottom, transparent 30%, rgba(44,37,32,0.95) 100%)"
+                  background: "linear-gradient(to bottom, transparent 45%, rgba(44,37,32,0.97) 100%)"
                 }} />
                 <div style={{ position: "absolute", bottom: 16, left: 16, right: 16 }}>
                   <h2 style={{
@@ -136,30 +136,34 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
           }}>
             <div className="label-text" style={{ marginBottom: 12 }}>당신이 놓아둔 위로</div>
             <div className="result-card">
-              <div style={{ display: "flex", gap: 16, marginBottom: 20, alignItems: "flex-start" }}>
-                <div style={{ position: "relative", width: 80, height: 80, flexShrink: 0, overflow: "hidden", border: "1px solid rgba(201,168,76,0.2)" }}>
-                  <Image
-                    src={offer.image}
-                    alt={offer.name}
-                    fill
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <h3 style={{
-                    fontFamily: "'Noto Serif KR', serif",
-                    fontSize: "1rem",
-                    fontWeight: 500,
-                    color: "var(--paper)",
-                    marginBottom: 8
-                  }}>
-                    {offer.name}
-                  </h3>
-                  <div style={{ display: "flex", flexWrap: "wrap" }}>
-                    {offer.keywords.map((kw) => (
-                      <span key={kw} className="keyword-tag">{kw}</span>
-                    ))}
-                  </div>
+              {/* 오브제 이미지 - 가로 꽉 채우기 */}
+              <div style={{ position: "relative", width: "calc(100% + 48px)", marginLeft: -24, marginTop: -28, marginBottom: 0, aspectRatio: "1.5", overflow: "hidden" }}>
+                <Image
+                  src={offer.image}
+                  alt={offer.name}
+                  fill
+                  style={{ objectFit: "cover" }}
+                />
+                <div style={{
+                  position: "absolute", inset: 0,
+                  background: "linear-gradient(to bottom, transparent 50%, rgba(44,37,32,0.98) 100%)"
+                }} />
+              </div>
+              {/* 이름 + 키워드 */}
+              <div style={{ padding: "20px 0 16px" }}>
+                <h3 style={{
+                  fontFamily: "'Noto Serif KR', serif",
+                  fontSize: "1.05rem",
+                  fontWeight: 500,
+                  color: "var(--paper)",
+                  marginBottom: 10
+                }}>
+                  {offer.name}
+                </h3>
+                <div style={{ display: "flex", flexWrap: "wrap" }}>
+                  {offer.keywords.map((kw) => (
+                    <span key={kw} className="keyword-tag">{kw}</span>
+                  ))}
                 </div>
               </div>
 
