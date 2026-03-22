@@ -239,7 +239,7 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
             style={{ textDecoration: "none", display: "block", marginBottom: 16 }}
           >
             <div className="btn-cta">
-              카마의 〈세심굿 - 응공이야기〉 공연 보러 가기 →
+              카마의 〈세심굿 - 응공이야기〉 공연 정보 보러 가기 →
             </div>
           </a>
 
