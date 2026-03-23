@@ -37,7 +37,7 @@ export default function MainScreen({ onStart }: Props) {
         <div style={{ height: 20 }} />
         <div className="animate-fadeUp anim-delay-4">
           <p style={{ fontSize: "0.7rem", color: "rgba(245,240,232,0.3)", textAlign: "center", fontFamily: "'Noto Sans KR', sans-serif", letterSpacing: "0.08em" }}>
-            2026.04.18 · 공연 예정
+            2026.04.19 · 공연 시작
           </p>
         </div>
       </div>
