@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { TIGER_TYPES, OFFERINGS } from "@/lib/data";
 
@@ -8,6 +7,7 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
   const [animIn, setAnimIn] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [saving, setSaving] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const tiger = TIGER_TYPES[tigerType];
   const offer = OFFERINGS[offering];
@@ -40,27 +40,39 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
   };
 
   const handleSaveImage = async () => {
+    if (saving) return;
+    setSaving(true);
     try {
       const html2canvas = (await import("html2canvas")).default;
       if (!cardRef.current) return;
+
       const canvas = await html2canvas(cardRef.current, {
         backgroundColor: "#1a1410",
         scale: 2,
         useCORS: true,
+        allowTaint: true,
         logging: false,
+        imageTimeout: 15000,
+        onclone: (doc) => {
+          doc.querySelectorAll("img").forEach((img) => {
+            img.crossOrigin = "anonymous";
+          });
+        },
       });
+
       const link = document.createElement("a");
       link.download = `내안의호랑이_${tiger.name}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     } catch (e) {
-      console.error(e);
+      console.error("이미지 저장 실패:", e);
+      alert("이미지 저장에 실패했어요. 스크린샷을 이용해 주세요.");
     }
+    setSaving(false);
   };
 
   return (
     <div className="screen" style={{ background: "var(--ink)", overflowY: "auto" }}>
-      {/* 배경 그라디언트 */}
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
         background: "radial-gradient(ellipse at 50% -10%, rgba(139,69,19,0.12) 0%, transparent 55%)"
@@ -72,8 +84,8 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
       </div>
 
       <div style={{ position: "relative", zIndex: 1, padding: "0 0 60px" }}>
-        {/* 공유/저장용 카드 영역 */}
-        <div ref={cardRef} id="share-card" style={{ padding: "0 28px" }}>
+        {/* 캡처 영역 */}
+        <div ref={cardRef} id="share-card" style={{ padding: "0 28px", background: "#1a1410" }}>
 
           {/* 호랑이 유형 카드 */}
           <div style={{
@@ -85,11 +97,12 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
             <div className="label-text" style={{ marginBottom: 12 }}>당신 안의 호랑이</div>
             <div className="result-card">
               <div style={{ position: "relative", width: "100%", aspectRatio: "1", marginBottom: 20, overflow: "hidden" }}>
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={tiger.image}
                   alt={tiger.name}
-                  fill
-                  style={{ objectFit: "cover" }}
+                  crossOrigin="anonymous"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 />
                 <div style={{
                   position: "absolute", inset: 0,
@@ -112,7 +125,6 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
                   </div>
                 </div>
               </div>
-
               <p className="body-text" style={{ fontSize: "0.85rem", lineHeight: 1.95 }}>
                 {tiger.description}
               </p>
@@ -120,11 +132,7 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
           </div>
 
           {/* 구분선 */}
-          <div style={{
-            margin: "24px 0",
-            opacity: animIn ? 1 : 0,
-            transition: "opacity 0.5s ease 0.35s"
-          }}>
+          <div style={{ margin: "24px 0", opacity: animIn ? 1 : 0, transition: "opacity 0.5s ease 0.35s" }}>
             <div className="divider" />
           </div>
 
@@ -136,20 +144,19 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
           }}>
             <div className="label-text" style={{ marginBottom: 12 }}>당신이 놓아둔 위로</div>
             <div className="result-card">
-              {/* 오브제 이미지 - 가로 꽉 채우기 */}
-              <div style={{ position: "relative", width: "calc(100% + 48px)", marginLeft: -24, marginTop: -28, marginBottom: 0, aspectRatio: "1.5", overflow: "hidden" }}>
-                <Image
+              <div style={{ position: "relative", width: "calc(100% + 48px)", marginLeft: -24, marginTop: -28, marginBottom: 0, overflow: "hidden" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={offer.image}
                   alt={offer.name}
-                  fill
-                  style={{ objectFit: "cover" }}
+                  crossOrigin="anonymous"
+                  style={{ width: "100%", aspectRatio: "1.5", objectFit: "cover", display: "block" }}
                 />
                 <div style={{
                   position: "absolute", inset: 0,
                   background: "linear-gradient(to bottom, transparent 50%, rgba(44,37,32,0.98) 100%)"
                 }} />
               </div>
-              {/* 이름 + 키워드 */}
               <div style={{ padding: "20px 0 16px" }}>
                 <h3 style={{
                   fontFamily: "'Noto Serif KR', serif",
@@ -166,7 +173,6 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
                   ))}
                 </div>
               </div>
-
               <p style={{
                 fontFamily: "'Noto Serif KR', serif",
                 fontSize: "0.88rem",
@@ -180,14 +186,13 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
               }}>
                 {offer.summary}
               </p>
-
               <p className="body-text" style={{ fontSize: "0.85rem", lineHeight: 1.95 }}>
                 {offer.description}
               </p>
             </div>
           </div>
 
-          {/* 공연 정보 소형 */}
+          {/* 공연 정보 */}
           <div style={{
             marginTop: 24,
             padding: "16px 20px",
@@ -215,7 +220,6 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
           opacity: animIn ? 1 : 0,
           transition: "opacity 0.5s ease 0.75s"
         }}>
-          {/* 공유 버튼 행 */}
           <div style={{ display: "flex", gap: 10, marginBottom: 12 }}>
             <button className="btn-share" onClick={handleShare} disabled={sharing}>
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
@@ -223,15 +227,14 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
               </svg>
               {copied ? "복사됨!" : "공유하기"}
             </button>
-            <button className="btn-share" onClick={handleSaveImage}>
+            <button className="btn-share" onClick={handleSaveImage} disabled={saving}>
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
                 <path d="M7.5 2v8M4 7l3.5 3.5L11 7M2 13h11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              이미지 저장
+              {saving ? "저장 중..." : "이미지 저장"}
             </button>
           </div>
 
-          {/* CTA 버튼 */}
           <a
             href="https://kama.kr"
             target="_blank"
@@ -239,11 +242,10 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
             style={{ textDecoration: "none", display: "block", marginBottom: 16 }}
           >
             <div className="btn-cta">
-              카마의 〈세심굿 - 응공이야기〉 공연 정보 보러 가기 →
+              카마의 〈세심굿 - 응공이야기〉 공연 보러 가기 →
             </div>
           </a>
 
-          {/* 다시 하기 */}
           <button
             onClick={onRestart}
             style={{
