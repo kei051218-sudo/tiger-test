@@ -83,7 +83,9 @@ export default function OfferingScreen({ tigerType, onSelect }: Props) {
                 fill
                 style={{ objectFit: "cover" }}
               />
-              <div className="item-label">{item.name}</div>
+              <div className="item-label" style={{ whiteSpace: "pre-line" }}>
+                {item.id === 5 ? "맑은 물\n한 사발" : item.name}
+              </div>
               {selected === item.id && (
                 <div style={{
                   position: "absolute", inset: 0,
