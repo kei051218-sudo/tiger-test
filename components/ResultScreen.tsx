@@ -7,7 +7,6 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
   const [animIn, setAnimIn] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [saving, setSaving] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const tiger = TIGER_TYPES[tigerType];
   const offer = OFFERINGS[offering];
@@ -37,55 +36,6 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
       // ignore
     }
     setSharing(false);
-  };
-
-  const handleSaveImage = async () => {
-    if (saving) return;
-    setSaving(true);
-    try {
-      const html2canvas = (await import("html2canvas")).default;
-      if (!cardRef.current) return;
-
-      const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: "#1a1410",
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
-        imageTimeout: 15000,
-        onclone: (doc) => {
-          doc.querySelectorAll("img").forEach((img) => {
-            img.crossOrigin = "anonymous";
-          });
-        },
-      });
-
-      const dataUrl = canvas.toDataURL("image/png");
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-      if (isMobile) {
-        // 모바일: 새 탭에서 이미지 열기 → 길게 눌러서 저장
-        const newTab = window.open();
-        if (newTab) {
-          newTab.document.write(
-            `<html><body style="margin:0;background:#1a1410;display:flex;flex-direction:column;align-items:center;padding:20px;">` +
-            `<p style="color:#c9a84c;font-family:sans-serif;font-size:14px;margin-bottom:16px;">이미지를 길게 눌러 저장하세요</p>` +
-            `<img src="${dataUrl}" style="max-width:100%;border-radius:4px;" />` +
-            `</body></html>`
-          );
-        }
-      } else {
-        // PC: 다운로드
-        const link = document.createElement("a");
-        link.download = `내안의호랑이_${tiger.name}.png`;
-        link.href = dataUrl;
-        link.click();
-      }
-    } catch (e) {
-      console.error("이미지 저장 실패:", e);
-      alert("이미지 저장에 실패했어요. 스크린샷을 이용해 주세요.");
-    }
-    setSaving(false);
   };
 
   return (
@@ -237,18 +187,12 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
           opacity: animIn ? 1 : 0,
           transition: "opacity 0.5s ease 0.75s"
         }}>
-          <div style={{ display: "flex", gap: 10, marginBottom: 12 }}>
-            <button className="btn-share" onClick={handleShare} disabled={sharing}>
+          <div style={{ marginBottom: 12 }}>
+            <button className="btn-share" style={{ width: "100%" }} onClick={handleShare} disabled={sharing}>
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
                 <path d="M10 2L13 5L10 8M13 5H5M5 2v11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               {copied ? "복사됨!" : "공유하기"}
-            </button>
-            <button className="btn-share" onClick={handleSaveImage} disabled={saving}>
-              <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-                <path d="M7.5 2v8M4 7l3.5 3.5L11 7M2 13h11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              {saving ? "저장 중..." : "이미지 저장"}
             </button>
           </div>
 
