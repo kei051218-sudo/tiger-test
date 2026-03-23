@@ -236,7 +236,7 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
           </div>
 
           <a
-            href="https://kama.kr"
+            href="https://www.playticket.co.kr/nav/detail.html?idx=4203"
             target="_blank"
             rel="noopener noreferrer"
             style={{ textDecoration: "none", display: "block", marginBottom: 16 }}
