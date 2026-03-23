@@ -60,10 +60,27 @@ export default function ResultScreen({ tigerType, offering, onRestart }: Props) 
         },
       });
 
-      const link = document.createElement("a");
-      link.download = `내안의호랑이_${tiger.name}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+      const dataUrl = canvas.toDataURL("image/png");
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        // 모바일: 새 탭에서 이미지 열기 → 길게 눌러서 저장
+        const newTab = window.open();
+        if (newTab) {
+          newTab.document.write(
+            `<html><body style="margin:0;background:#1a1410;display:flex;flex-direction:column;align-items:center;padding:20px;">` +
+            `<p style="color:#c9a84c;font-family:sans-serif;font-size:14px;margin-bottom:16px;">이미지를 길게 눌러 저장하세요</p>` +
+            `<img src="${dataUrl}" style="max-width:100%;border-radius:4px;" />` +
+            `</body></html>`
+          );
+        }
+      } else {
+        // PC: 다운로드
+        const link = document.createElement("a");
+        link.download = `내안의호랑이_${tiger.name}.png`;
+        link.href = dataUrl;
+        link.click();
+      }
     } catch (e) {
       console.error("이미지 저장 실패:", e);
       alert("이미지 저장에 실패했어요. 스크린샷을 이용해 주세요.");
